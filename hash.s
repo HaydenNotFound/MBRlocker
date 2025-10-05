@@ -1,11 +1,11 @@
 section .data:
-    prompt1 db "Enter a decimal number (you can also enter letters, but that's a secret: ", 0  ; Приглашение для ввода
+    prompt1 db "Enter a decimal number (you can also enter letters, but that's a secret): ", 0  ; РџСЂРёРіР»Р°С€РµРЅРёРµ РґР»СЏ РІРІРѕРґР°
     prompt2 db "Here, your hash is a baller hacker: ", 0  
     prompt3 db 10
 
 section .bss
-    password_num resb 4             ; Переменная для хранения числа (4 байт)
-    password_input resb 16          ; Буфер для ввода строки (16 байт)
+    password_num resb 4             ; Variable for storing a number (4 bytes)
+    password_input resb 16          ; String input buffer (16 bytes)
     password_len resb 4
     password_output resb 17 
 
@@ -17,90 +17,90 @@ section .text
    
 _start:    
 
-    mov rax, 1                      ; Системный вызов write
-    mov rdi, 1                      ; Дескриптор stdout
-    mov rsi, prompt1                ; Указатель на строку приглашения
-    mov rdx, 73                     ; Длина строки приглашения
+    mov rax, 1                      ; System call write
+    mov rdi, 1                      ; Descriptor stdout
+    mov rsi, prompt1                ; Pointer to the invitation string
+    mov rdx, 73                     ; Invitation string length
     syscall 
 
-    mov rax, 0                      ; Системный вызов read
-    mov rdi, 0                      ; Дескриптор stdin
-    mov rsi, password_input         ; Указатель на буфер для ввода
-    mov rdx, 16                     ; Максимальная длина ввода (16 символов)
+    mov rax, 0                      ; System call read
+    mov rdi, 0                      ; Descriptor stdin
+    mov rsi, password_input         ; Pointer to input buffer
+    mov rdx, 16                     ; Maximum input length (16 characters)
     syscall 
 
-    mov rax, 1                      ; Системный вызов write
-    mov rdi, 1                      ; Дескриптор stdout
-    mov rsi, prompt3                ; Указатель на строку приглашения
-    mov rdx, 1                      ; Длина строки приглашения
+    mov rax, 1                      ; System call write
+    mov rdi, 1                      ; Descriptor stdout
+    mov rsi, prompt3                ; Pointer to the invitation string
+    mov rdx, 1                      ; Invitation string length
     syscall 
 
-    mov rax, 1                      ; Системный вызов write
-    mov rdi, 1                      ; Дескриптор stdout
-    mov rsi, prompt2                ; Указатель на строку приглашения
-    mov rdx, 36                     ; Длина строки приглашения
+    mov rax, 1                      ; System call write
+    mov rdi, 1                      ; Descriptor stdout
+    mov rsi, prompt2                ; Pointer to the invitation string
+    mov rdx, 36                     ; Invitation string length
     syscall 
 ;----------------------------------------------------------------------------------------------------
 
     mov rsi, password_input
-    xor rax, rax                    ; Обнуляем RAX (будет содержать результат)
-    xor rcx, rcx                    ; Обнуляем RCX (счётчик цифр)
+    xor rax, rax                    ; РћР±РЅСѓР»СЏРµРј RAX (Р±СѓРґРµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚)
+    xor rcx, rcx                    ; РћР±РЅСѓР»СЏРµРј RCX (СЃС‡С‘С‚С‡РёРє С†РёС„СЂ)
 
-    .NEXT_CHAR:                     ; Конец строки расчитывается по Enter
-        mov bl, byte [rsi + rcx]    ; Загружаем очередной символ из строки
-        cmp bl, 10                  ; Проверяем, достигли ли конца строки (нулевой символ)
-        je .done                    ; Если достигли, завершаем функцию
+    .NEXT_CHAR:                     ; РљРѕРЅРµС† СЃС‚СЂРѕРєРё СЂР°СЃС‡РёС‚С‹РІР°РµС‚СЃСЏ РїРѕ Enter
+        mov bl, byte [rsi + rcx]    ; Р—Р°РіСЂСѓР¶Р°РµРј РѕС‡РµСЂРµРґРЅРѕР№ СЃРёРјРІРѕР» РёР· СЃС‚СЂРѕРєРё
+        cmp bl, 10                  ; РџСЂРѕРІРµСЂСЏРµРј, РґРѕСЃС‚РёРіР»Рё Р»Рё РєРѕРЅС†Р° СЃС‚СЂРѕРєРё (РЅСѓР»РµРІРѕР№ СЃРёРјРІРѕР»)
+        je .done                    ; Р•СЃР»Рё РґРѕСЃС‚РёРіР»Рё, Р·Р°РІРµСЂС€Р°РµРј С„СѓРЅРєС†РёСЋ
 
-        sub bl, '0'                 ; Преобразуем символ в цифру
-        imul ax, 10                 ; Умножаем текущий результат на 10
-        add ax, bx                  ; Добавляем новую цифру к результату
+        sub bl, '0'                 ; РџСЂРµРѕР±СЂР°Р·СѓРµРј СЃРёРјРІРѕР» РІ С†РёС„СЂСѓ
+        imul ax, 10                 ; РЈРјРЅРѕР¶Р°РµРј С‚РµРєСѓС‰РёР№ СЂРµР·СѓР»СЊС‚Р°С‚ РЅР° 10
+        add ax, bx                  ; Р”РѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ С†РёС„СЂСѓ Рє СЂРµР·СѓР»СЊС‚Р°С‚Сѓ
 
-        inc cx                     ; Переходим к следующему символу
-        jmp .NEXT_CHAR              ; Повторяем цикл
+        inc cx                     ; РџРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµРјСѓ СЃРёРјРІРѕР»Сѓ
+        jmp .NEXT_CHAR              ; РџРѕРІС‚РѕСЂСЏРµРј С†РёРєР»
 
         .done:
             mov [password_num], ax
             mov [password_len], cx
 
-    ; в rax хранится введенным пользователем пароль в числовом виде 
+    ; РІ rax С…СЂР°РЅРёС‚СЃСЏ РІРІРµРґРµРЅРЅС‹Рј РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј РїР°СЂРѕР»СЊ РІ С‡РёСЃР»РѕРІРѕРј РІРёРґРµ 
 ;----------------------------------------------------------------------------------------------------
     
-    mov rdi, password_num ; rsi - адрес введенного пароля
+    mov rdi, password_num ; rsi - Р°РґСЂРµСЃ РІРІРµРґРµРЅРЅРѕРіРѕ РїР°СЂРѕР»СЏ
 
     FNV1A_HASH:
-        ; Константы FNV-1a
+        ; РљРѕРЅСЃС‚Р°РЅС‚С‹ FNV-1a
         mov ax, 0xcbf2          ; FNV offset basis
         mov cx, 0x11b3          ; FNV prime
 
-        ; Хэширование
-        xor dx, dx                    ; Обнуляем rdx (счетчик)
+        ; РҐСЌС€РёСЂРѕРІР°РЅРёРµ
+        xor dx, dx                    ; РћР±РЅСѓР»СЏРµРј rdx (СЃС‡РµС‚С‡РёРє)
         .HASH_LOOP:
-            cmp rdx, [password_len]         ; Проверяем, достигли ли конца строки
-            jge .HASH_DONE                  ; Если достигли, завершаем хэширование
+            cmp rdx, [password_len]         ; РџСЂРѕРІРµСЂСЏРµРј, РґРѕСЃС‚РёРіР»Рё Р»Рё РєРѕРЅС†Р° СЃС‚СЂРѕРєРё
+            jge .HASH_DONE                  ; Р•СЃР»Рё РґРѕСЃС‚РёРіР»Рё, Р·Р°РІРµСЂС€Р°РµРј С…СЌС€РёСЂРѕРІР°РЅРёРµ
 
-            mov bl, byte [rdi + rdx]        ; Загружаем очередной байт из строки
-            xor ax, bx                      ; XOR хэш с байтом
-            imul ax, cx                     ; Умножаем хэш на FNV prime
+            mov bl, byte [rdi + rdx]        ; Р—Р°РіСЂСѓР¶Р°РµРј РѕС‡РµСЂРµРґРЅРѕР№ Р±Р°Р№С‚ РёР· СЃС‚СЂРѕРєРё
+            xor ax, bx                      ; XOR С…СЌС€ СЃ Р±Р°Р№С‚РѕРј
+            imul ax, cx                     ; РЈРјРЅРѕР¶Р°РµРј С…СЌС€ РЅР° FNV prime
 
-            inc rdx                         ; Переходим к следующему байту
-            jmp .HASH_LOOP                  ; Повторяем цикл
+            inc rdx                         ; РџРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµРјСѓ Р±Р°Р№С‚Сѓ
+            jmp .HASH_LOOP                  ; РџРѕРІС‚РѕСЂСЏРµРј С†РёРєР»
 
         .HASH_DONE:
             mov [password_num], ax
             mov ax, [password_num]
 ;----------------------------------------------------------------------------------------------------
 
-    mov ax, [password_num]                ; Загружаем число в rax
-    mov rbx, password_output              ; Буфер для вывода
+    mov ax, [password_num]                ; Р—Р°РіСЂСѓР¶Р°РµРј С‡РёСЃР»Рѕ РІ rax
+    mov rbx, password_output              ; Р‘СѓС„РµСЂ РґР»СЏ РІС‹РІРѕРґР°
     call INT_TO_STRING
 
-    mov rax, 1                      ; Системный вызов write
-    mov rdi, 1                      ; Дескриптор stdout
-    mov rsi, password_output        ; Указатель на строку приглашения
-    mov rdx, 17                     ; Длина строки приглашения
+    mov rax, 1                      ; РЎРёСЃС‚РµРјРЅС‹Р№ РІС‹Р·РѕРІ write
+    mov rdi, 1                      ; Р”РµСЃРєСЂРёРїС‚РѕСЂ stdout
+    mov rsi, password_output        ; РЈРєР°Р·Р°С‚РµР»СЊ РЅР° СЃС‚СЂРѕРєСѓ РїСЂРёРіР»Р°С€РµРЅРёСЏ
+    mov rdx, 17                     ; Р”Р»РёРЅР° СЃС‚СЂРѕРєРё РїСЂРёРіР»Р°С€РµРЅРёСЏ
     syscall 
 
-    mov rax, 60                     ; Завершаем программу
+    mov rax, 60                     ; Р—Р°РІРµСЂС€Р°РµРј РїСЂРѕРіСЂР°РјРјСѓ
     xor rdi, rdi
     syscall
 
@@ -108,24 +108,25 @@ _start:
 ;----------------------------------------------------------------------------------------------------
 
     INT_TO_STRING:
-    mov cx, 4                      ; Количество символов в ax числе
+    mov cx, 4                      ; РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ ax С‡РёСЃР»Рµ
    
     .LOOP:
-        rol ax, 4                  ; Двигаем число влево на 4 бита (чтобы обработать старший ниббл)
-        mov dl, al                 ; Загружаем младший ниббл
-        and dl, 0xF                ; Оставляем только 4 младших бита
-        cmp dl, 10                 ; Если меньше 10, это цифра
+        rol ax, 4                  ; Р”РІРёРіР°РµРј С‡РёСЃР»Рѕ РІР»РµРІРѕ РЅР° 4 Р±РёС‚Р° (С‡С‚РѕР±С‹ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ СЃС‚Р°СЂС€РёР№ РЅРёР±Р±Р»)
+        mov dl, al                 ; Р—Р°РіСЂСѓР¶Р°РµРј РјР»Р°РґС€РёР№ РЅРёР±Р±Р»
+        and dl, 0xF                ; РћСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ 4 РјР»Р°РґС€РёС… Р±РёС‚Р°
+        cmp dl, 10                 ; Р•СЃР»Рё РјРµРЅСЊС€Рµ 10, СЌС‚Рѕ С†РёС„СЂР°
         jl .DIGIT
-        add dl, 'A' - 10           ; Преобразуем в букву (A-F)
+        add dl, 'A' - 10           ; РџСЂРµРѕР±СЂР°Р·СѓРµРј РІ Р±СѓРєРІСѓ (A-F)
         jmp .STORE
 
     .DIGIT:
-        add dl, '0'                ; Преобразуем в цифру
+        add dl, '0'                ; РџСЂРµРѕР±СЂР°Р·СѓРµРј РІ С†РёС„СЂСѓ
 
     .STORE:
-        mov [rbx], dl              ; Сохраняем символ в буфер
-        inc rbx                    ; Переход к следующей ячейке
-        loop .LOOP                 ; Повторяем цикл
+        mov [rbx], dl              ; РЎРѕС…СЂР°РЅСЏРµРј СЃРёРјРІРѕР» РІ Р±СѓС„РµСЂ
+        inc rbx                    ; РџРµСЂРµС…РѕРґ Рє СЃР»РµРґСѓСЋС‰РµР№ СЏС‡РµР№РєРµ
+        loop .LOOP                 ; РџРѕРІС‚РѕСЂСЏРµРј С†РёРєР»
 
-    mov byte [rbx], 0              ; Добавляем нуль-терминатор
+    mov byte [rbx], 0              ; Р”РѕР±Р°РІР»СЏРµРј РЅСѓР»СЊ-С‚РµСЂРјРёРЅР°С‚РѕСЂ
+
     ret
